@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Phoenix: A Motion-based Self-Reflection Framework for Fine-grained Robotic Action Correction">
+  <meta name="keywords" content="Audio-visual, modality imbalance">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kinematic-aware Prompting for Generalizable Articulated Object Manipulation with LLMs</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://xwinks.github.io/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://gewu-lab.github.io/">
+            GeWu-Lab
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Phoenix: A Motion-based Self-Reflection Framework for Fine-grained Robotic Action Correction</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://xwinks.github.io/">Wenke Xia</a><sup>1,2,*</sup>,</span>
+              <span class="author-block">
+                <a href="">Ruoxuan Feng</a><sup>1</sup>,
+              </span>
+
+              <span class="author-block">
+              <a href="">Dong Wang</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="">Di Hu</a><sup>1,†</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Gaoling School of Artificial Intelligence, Renmin University of China</span>
+            <span class="author-block"><sup>2</sup>Shanghai Artificial Intelligence Laboratory</span>
+          </div>
+
+          <div class="is-size-7">
+            <span>* work is done during internship at Shanghai Artificial Intelligence Laboratory, † Corresponding author</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2311.02847.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2311.02847"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/GeWu-Lab/LLM_articulated_object_manipulation"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="bottle" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/bottle.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="faucet" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/faucet.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="low_open_cabinet" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/low_open_cabinet.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="close_cabinet" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/close_cabinet.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="pot" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/pot.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="stapler" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/stapler.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-steve">
+          <video poster="" id="low_bucket" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/low_bucket.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Building a generalizable self-correction system is crucial for robots to recover from failures.
+            Despite advancements in Multimodal Large Language Models (MLLMs) that empower robots with semantic reflection ability for failure, translating semantic reflection into how to correct fine-grained robotic actions remains a significant challenge.
+            To address this gap, we build the Phoenix framework, which leverages motion instruction as a bridge to connect high-level semantic reflection with low-level robotic action correction. 
+            In this motion-based self-reflection framework,
+            we start with a dual-process motion adjustment mechanism with MLLMs to translate the semantic reflection into coarse-grained motion instruction adjustment. To leverage this motion instruction for guiding how to correct fine-grained robotic actions, a multi-task motion-conditioned diffusion policy is proposed to integrate visual observations for high-frequency robotic action correction.
+            By combining these two models, we could shift the demand for generalization capability from the low-level manipulation policy to the MLLMs-driven motion adjustment model and facilitate precise, fine-grained robotic action correction.
+            Utilizing this framework, we further develop a lifelong learning method to automatically improve the model's capability from interactions with dynamic environments.
+            The experiments conducted in both the RoboMimic simulation and real-world scenarios prove the superior generalization and robustness of our framework across a variety of manipulation tasks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p>
+            Humans are naturally equipped with the ability to correct their behaviors by intentionally reflecting on actions that lead to failure.
+            To emulate the correction capability and foster a continuous cycle of self-improvement in robots, researchers have sought to develop self-reflection systems that enable robots to recover from and learn through their failure interactions.
+            Recent works borrow the inferential capability of Multi-modal Large Language Models (MLLMs) to propose closed-loop high-level semantic reflection framework for failure correction. Although these semantic self-reflection frameworks can decompose the failure correction process into semantic subgoals, they primarily rely on a predefined skill library to execute the detailed subgoals, which fails to utilize the generalization ability of MLLMs in fine-grained robotic action correction.
+          </p>
+          <div class="column ">
+            <img src="./static/images/teaser.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image."/>
+            <center>
+              <p>Figure 1: Our pipeline.</p>
+            </center>
+          </div>
+          <p>
+            To maximize the generalization potential of MLLMs for action correction, we propose motion instruction as a bridge to convert high-level semantic reflection to fine-grained robotic action correction.
+Motion instruction refers to coarse-grained robotic movement commands such as "move arm backward". Serving as an intermediate layer, motion instruction could provide general, low-frequency decision information for high-frequency robotic action execution, which makes it an excellent medium for embedding the knowledge of MLLMs into fine-grained action correction.
+As shown in Figure 1, we decompose the semantic reflection knowledge into coarse-grained motion instruction adjustment to indicate "how to correct" fine-grained action for low-level policy execution. This transition shifts the perceptual and decision-making requirements from low-level robotic policy to the MLLMs-driven motion adjustment model, thereby enabling generalizable, fine-grained robotic action correction.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <div class="column ">
+            <img src="./static/images/pipeline.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image."/>
+            <center>
+              <p>Figure 2: Our motion-based self-reflection framework.</p>
+            </center>
+          </div>
+          <p>
+            In this work, we build the Phoenix framework, a motion-based self-reflection framework designed to convert the semantic reflection of MLLMs into fine-grained robotic action correction.Initially, we develop a dual-process motion adjustment mechanism to ensure efficient prediction through a motion prediction module, while addressing failure with a motion correction module.
+            Concretely, we first utilize expert demonstration trajectories to train the motion prediction module for efficient motion instruction generation. To recover from failures, we collect a comprehensive failure correction dataset and fine-tune the motion correction module, which thoroughly provides adjusted motion instructions through a chain-of-thought approach. By integrating these two modules, the dual-process motion adjustment mechanism guarantees both robustness and efficiency, facilitating the generation of accurate motion instructions.
+            As the coarse-grained motion instructions only provide general and low-frequency guidance for robotic manipulation, we further design a multi-task motion-conditioned diffusion policy that integrates visual observations to translate motion instruction into precise, high-frequency action corrections for manipulation tasks.
+            Moreover, by leveraging these correction trajectories, we propose a lifelong learning method that iteratively enhances the model's capabilities through interaction, ensuring continuous improvements in performance and adaptability to dynamic environments.
+          </p>
+        </div>
+
+        <div class="content has-text-justified">
+          <h3>Dual-process Motion Adjustment Mechanism</h3>
+        <p> The dual-process motion adjustment mechanism is designed to ensure efficient motion prediction through a motion prediction module, while comprehensively addressing failure with a motion correction module.
+            Given the observation \(O\) and task description \(T\), we first train a Motion Prediction Module (MPM) with expert demonstration dataset \(D_e\) to generate initial motion instruction \(m_i\). However, the MPM trained on expert demonstrations struggles to handle failure situations. Thus, we construct a comprehensive failure correction dataset \(D_c\) to fine-tune the Motion Correction Module (MCM), enabling it to analyze the failure situation and adjust \(m_i\) with a chain-of-thought approach.
+            If \(m_i\) is deemed correct, we adopt it as the decision motion instruction \(m_d\) for further robotic action prediction. Otherwise, we employ the MCM to analyze the failure situation and generate adjusted motion instruction \(m_a\) as decision motion instruction \(m_d\). Through the guidance of \(m_d\), our motion-based diffusion policy can generate high-frequency corrections to the robotic actions.
+            As described in Algorithm 1, we establish the dual-process motion adjustment mechanism to guarantee the efficiency and accuracy of motion instruction generation for fine-grained robotic action prediction.</p>
+            <div class="column ">
+                <img src="./static/images/algo.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+                <center>
+                  <p>Figure 2: Our motion-based self-reflection framework.</p>
+                </center>
+              </div>
+        </div>
+
+        <div class="content has-text-justified">
+            <h3>Motion-conditioned Diffusion Policy</h3>
+            <p>As the motion instruction only provides general and low-frequency guidance for manipulation, we train a multi-task motion-conditioned diffusion policy \(\pi\) to convert the motion instructions into precise, high-frequency robotic actions. This policy takes observations \(O\) and decision motion instructions \(m_d\) to output robotic actions \(a\). To ensure the policy adheres to the motion instruction, we make adjustments as depicted in Figure 2(b).</p>
+        </div>
+
+        <div class="content has-text-justified">
+            <h3>Action Correction for Lifelong Learning</h3>
+            <p>Benefiting from the motion-conditioned diffusion policy which could adhere to the motion instruction to generate task-aware robotic action, we can enhance the robot's capabilities through only improving the MPM informed by the refined interaction trajectory. To address the issue of catastrophic forgetting, we mix the refined interaction trajectory with expert demonstration for co-fine-tuning, allowing the model to simultaneously learn failure correction and enhance the motion prediction capabilities.
+                Through updates from refined interaction trajectories, our model can achieve self-improvement by learning from the knowledge of the motion correction module, achieving fast and accurate manipulation for contact-rich manipulation tasks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Experiment</h2>
+        <div class="content has-text-justified">
+            <h3>Comparison Results</h3>
+            <div class="column ">
+                <img src="./static/images/main_result.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+                <center>
+                  <p>Table 1: Comparison experiments results across 9 manipulation tasks in RoboMimic Simulation.</p>
+                </center>
+              </div>
+            <p>To ensure fairness, all our comparison methods are trained on the expert data from the simulation environment, with the decision model using LLaVA-v1.5 and the underlying policy employing a diffusion policy.</p>
+            <ul>
+                <li><b>OpenVLA:</b> We fine-tune the OpenVLA model to provide baseline performance for multi-task experiments.</li>
+                <li><b>Task-conditioned policy:</b> We take the task description as the condition for diffusion policy without the reflection framework, as a variance of RT-1 and Octo.</li>
+                <li><b>Subgoal-conditioned policy:</b> We fine-tune a LLaVA-v1.5 to predict subgoals at 5Hz, which are utilized as the condition for diffusion policy without reflection framework. This method borrows the semantic comprehension capabilities of MLLMs, and is implemented as a variance of PaLM-E with an individual diffusion policy.</li>
+                <li><b>Motion-conditioned policy:</b> We fine-tune a LLaVA-v1.5 as the motion prediction model to provide motion instructions at 5Hz, using these predictions to condition the diffusion policy without the reflection framework. This method employs the perceptual and inferential capacities of MLLMs, realized as a variation of RT-H with an individual diffusion policy.</li>
+                <li><b>Human Intervention:</b> We manually correct the wrong motion instructions for the motion-conditioned policy. This method provides an upper bound on the performance of self-reflection methods. Due to labor costs, the results are presented as average success rates across 10 trials.</li>
+                <li><b>Subgoal Self-reflection:</b> We fine-tune a LLaVA-v1.5 as subgoal self-reflection model and apply it to the subgoal-condition policy. This method is designed to validate the effectiveness of the semantic self-reflection model.</li>
+            </ul>
+
+
+            <p> Our Phoenix method achieves more substantial improvements than the subgoal self-reflection method, demonstrating the effectiveness of motion-conditioned method in long-horizon sequential tasks and fine-grained manipulation tasks.
+Benefiting from our motion-based correction method, agent could correct fine-grained action through motion instruction adjustment while the subgoal-conditioned self-reflection model fails to recover from most failure situations.
+Besides, the human intervention method achieves high success rates across multiple tasks, demonstrating that our motion-conditioned diffusion policy can effectively adhere to motion instructions for manipulation tasks. This result indicates that our method can perform well under the correct motion instructions, showcasing the significant potential of motion-conditioned self-reflection.</p>
+        </div>
+        <div class="content has-text-justified">
+            <h3>Lifelong Learning</h3>
+            <div class="column ">
+                <img src="./static/images/lifelong_learning.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+                <center>
+                  <p>Figure 3: Lifelong learning results.</p>
+                </center>
+              </div>
+              <p>We compare the lifelong learning ability of our motion-based self-reflection model and subgoal-based self-reflection model. During testing, we record the average success rate over 50 trials. As shown in Figure 3, the subgoal-based lifelong learning fails to enhance model performance during the exploration phase due to its inability to provide fine-grained action correction. In contrast, our method corrects underlying action execution during interactions, allowing the robot to better learn from the refined trajectories, thereby achieving self-improvement.</p>
+        </div>
+
+
+        <div class="content has-text-justified">
+            <h3>Real-world Experiments</h3>
+            <div class="column ">
+                <img src="./static/images/real_more.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+                <center>
+                  <p>Figure 4: The real-world experiments. The results prove the generalization ability of our framework in real-world scenarios.</p>
+                </center>
+              </div>
+              <p>As shown in Figure 4(a), we conduct experiments on three tasks: putting the cube on the scale, taking the rag off, and pressing the button. For each manipulation task, we collect 80 trajectories with corresponding motion instructions. To deploy the MLLMs in real-world scenarios, we fine-tuned a TinyLLaVA-OpenELM-450M-SigLIP-0.89B model to operate at a frequency of 3Hz on a 10G 4070. We also replace the diffusion policy with a rule-based operation to execute the robotic actions to adhere to the motion instructions.  During the inference process, we introduced human-in-the-loop interventions to manually correct failure situations and collect corresponding refined interaction trajectories. We collect 20 refined trajectories per task, which serve as the training dataset for the motion correction model to implement a motion-based self-reflection framework. Our motion-based self-reflection model further significantly enhances the success rate with comprehensive motion adjustment, demonstrating the effectiveness of our approach in real-world scenarios.</p>
+              
+
+              <div class="column ">
+                <img src="./static/images/real_demo.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+                <center>
+                  <p>Figure 5: The real-world experiments with different variations.</p>
+                </center>
+              </div>
+              <p>
+                We further conduct the challenging "drawer open" articulated object manipulation task as shown in Figure 5(a), where robot needs to align gripper with handle through precise rotations to open the drawer. We utilize the spacemouse device to collect 100 expert demonstrations with 14 motion instructions (e.g., "move arm right", "rotate around x-axis"). We train a motion-conditioned diffusion policy to convert instructions into robotic actions.
+                To validate generalization, we design 4 settings as shown in Figure 5(b-e). In pose disruption setting, we change the pose distribution of the drawer. For the background disruption setting, background color was modified to green. In the texture disruption setting, the texture of the drawer was altered to evaluate performance under significant visual variations.
+                The results in Table 2 prove the effectiveness of our method in various distuption settings.
+              </p>
+              <div class="column ">
+                <img src="./static/images/real_results.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+                <center>
+                  <p>Table 2: The real-world experiments results.</p>
+                </center>
+              </div>
+            </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Conclusion</h2>
+        <div class="content has-text-justified">
+          <p>
+            In this work, we propose a motion-based self-reflection framework to convert the semantic reflection of MLLMs into fine-grained robotic action correction. Based on this framework, we further automatically improve the model's capability from interactions. 
+We hope this motion-based self-reflection framework could bring insights for enhancing the generalization capabilities of agents in robotic manipulation tasks through the integration of MLLMs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{xia2023balanced,
+      title={Balanced Audiovisual Dataset for Imbalance Analysis},
+      author={Xia, Wenke and Zhao, Xu and Pang, Xincheng and Zhang, Changqing and Hu, Di},
+      journal={arXiv preprint arXiv:2302.10912},
+      year={2023}
+    }</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
